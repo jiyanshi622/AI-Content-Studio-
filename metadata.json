@@ -1,0 +1,6 @@
+{
+  "name": "AI Content Studio",
+  "description": "Turn your event details into ready-to-post captions, invitations, announcements, hashtags, and multi-day campaigns in seconds.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
