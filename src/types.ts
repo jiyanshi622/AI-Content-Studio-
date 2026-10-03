@@ -45,6 +45,7 @@ export interface UserAccount {
   name: string;
   email: string;
   password?: string;
+  avatar?: string;
   role: AppMode; // 'organizer' | 'participant' | 'creator'
   organization?: string;
   collegeOrCompany?: string;
@@ -225,3 +226,126 @@ export interface ReelResponse {
     retentionScore: number;
   };
 }
+
+// ==========================================
+// MEDIA AI STUDIO DEFINITIONS (3 Core Features)
+// ==========================================
+
+export interface ImageAnalysisResult {
+  visualDetails: {
+    description: string;
+    detectedObjects: string[];
+    dominantColors: string[];
+    mood: string;
+    detectedText?: string;
+    keyThemes: string[];
+  };
+  postContent: {
+    hook: string;
+    caption: string;
+    shortCaption: string;
+    callToAction: string;
+    hashtags: string[];
+    keywords: string[];
+    emojis: string[];
+  };
+}
+
+export interface MediaItemAnalysis {
+  id: string;
+  name: string;
+  type: 'image' | 'video';
+  thumbnailUrl?: string;
+  score: number; // 0 - 100
+  role: 'main' | 'supporting';
+  strengths: string[];
+  weaknesses: string[];
+  recommendedPlacement: string;
+}
+
+export interface MediaRecommendationResult {
+  bestMediaId: string;
+  bestMediaName: string;
+  bestMediaType: 'image' | 'video';
+  mainMediaRationale: string;
+  supportingMediaRoles: {
+    mediaId: string;
+    mediaName: string;
+    recommendedRole: string;
+    whySupporting: string;
+  }[];
+  comparativeAnalysis: string;
+  mediaItems: MediaItemAnalysis[];
+  option1: {
+    title: string;
+    angle: string;
+    hook: string;
+    caption: string;
+    shortCaption: string;
+    callToAction: string;
+    hashtags: string[];
+  };
+  option2: {
+    title: string;
+    angle: string;
+    hook: string;
+    caption: string;
+    shortCaption: string;
+    callToAction: string;
+    hashtags: string[];
+  };
+}
+
+export interface VideoAnalysisResult {
+  visualAnalysis: {
+    visuals: string;
+    objects: string[];
+    people: {
+      count: string;
+      description: string;
+      expressions: string;
+    };
+    products: string[];
+    scenes: {
+      timestamp: string;
+      description: string;
+    }[];
+    visibleText: string[];
+    importantMoments: {
+      timestamp: string;
+      title: string;
+      description: string;
+    }[];
+    context: string;
+  };
+  audioSpeechAnalysis: {
+    hasAudioOrSpeech: boolean;
+    extractedSpeech: string;
+    spokenInformation: string;
+    importantDetails: string[];
+    mainTopic: string;
+    toneAndDelivery: string;
+  };
+  combinedSynthesis: string;
+  option1: {
+    title: string;
+    angle: string;
+    hook: string;
+    caption: string;
+    shortCaption: string;
+    callToAction: string;
+    hashtags: string[];
+    keyHighlights: string[];
+  };
+  option2: {
+    title: string;
+    angle: string;
+    hook: string;
+    caption: string;
+    shortCaption: string;
+    callToAction: string;
+    hashtags: string[];
+    keyHighlights: string[];
+  };
+}
+

@@ -650,7 +650,7 @@ export const CreateContentForm: React.FC<CreateContentFormProps> = ({
                   type="text"
                   value={additionalInfo}
                   onChange={(e) => setAdditionalInfo(e.target.value)}
-                  placeholder="e.g. ₹50,000 cash prizes, free snacks, certificates"
+                  placeholder="e.g. $5,000 cash prizes, free snacks, certificates"
                   className="w-full pl-9 pr-3.5 py-2.5 text-sm bg-slate-950 border border-slate-800 rounded-lg text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-colors"
                 />
               </div>

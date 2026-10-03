@@ -1,0 +1,85 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny catch-all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Validate User Profile
+    function isValidUserProfile(data) {
+      return data.uid is string && data.uid == request.auth.uid &&
+             data.email is string && data.email.size() <= 150 &&
+             data.name is string && data.name.size() <= 100 &&
+             data.role in ['organizer', 'participant'];
+    }
+
+    // Validate Event
+    function isValidEvent(data) {
+      return data.userUid is string && data.userUid == request.auth.uid &&
+             data.eventName is string && data.eventName.size() <= 150 &&
+             data.eventType is string && data.eventType.size() <= 60 &&
+             data.eventDate is string && data.eventDate.size() <= 50 &&
+             data.venue is string && data.venue.size() <= 150 &&
+             data.organizer is string && data.organizer.size() <= 150;
+    }
+
+    // Validate Reel
+    function isValidReel(data) {
+      return data.title is string && data.title.size() <= 150 &&
+             data.topic is string && data.topic.size() <= 200 &&
+             data.platforms is string && data.platforms.size() <= 100 &&
+             data.hook is string && data.hook.size() <= 500 &&
+             data.script is string && data.script.size() <= 5000;
+    }
+
+    // Users Collection
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isOwner(userId) && isValidUserProfile(incoming());
+      allow update: if isOwner(userId) && isValidUserProfile(incoming()) && incoming().uid == existing().uid;
+      allow delete: if isOwner(userId);
+    }
+
+    // Events Collection
+    match /events/{eventId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isValidEvent(incoming());
+      allow update: if isSignedIn() && existing().userUid == request.auth.uid && isValidEvent(incoming()) && incoming().userUid == existing().userUid;
+      allow delete: if isSignedIn() && existing().userUid == request.auth.uid;
+    }
+
+    // Reels Collection
+    match /reels/{reelId} {
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
+      allow create: if isSignedIn() && isValidReel(incoming());
+      allow update: if isSignedIn() && existing().userUid == request.auth.uid && isValidReel(incoming());
+      allow delete: if isSignedIn() && existing().userUid == request.auth.uid;
+    }
+  }
+}

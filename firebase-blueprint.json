@@ -1,0 +1,82 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User profile representing organizers, creators, or participants",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID" },
+        "email": { "type": "string", "format": "email", "description": "User email address" },
+        "name": { "type": "string", "maxLength": 100, "description": "User display name" },
+        "role": { "type": "string", "enum": ["organizer", "participant"], "description": "User system role" },
+        "organization": { "type": "string", "maxLength": 150, "description": "Organization or team name" },
+        "collegeOrCompany": { "type": "string", "maxLength": 150, "description": "College or company name" },
+        "bio": { "type": "string", "maxLength": 500, "description": "Short biography" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Account creation timestamp" }
+      },
+      "required": ["uid", "email", "name", "role"]
+    },
+    "Event": {
+      "title": "Event",
+      "description": "Organizer event record with campaign content",
+      "type": "object",
+      "properties": {
+        "userUid": { "type": "string", "description": "Owner Firebase UID" },
+        "eventName": { "type": "string", "maxLength": 150, "description": "Name of the event" },
+        "eventType": { "type": "string", "maxLength": 60, "description": "Type of event" },
+        "eventDate": { "type": "string", "maxLength": 50, "description": "Event scheduled date" },
+        "eventTime": { "type": "string", "maxLength": 50, "description": "Event scheduled time" },
+        "venue": { "type": "string", "maxLength": 150, "description": "Event venue or link" },
+        "organizer": { "type": "string", "maxLength": 150, "description": "Organizing entity" },
+        "description": { "type": "string", "maxLength": 3000, "description": "Event description" },
+        "targetAudience": { "type": "string", "maxLength": 200, "description": "Target audience" },
+        "registrationLink": { "type": "string", "maxLength": 300, "description": "Registration URL" },
+        "contactInfo": { "type": "string", "maxLength": 200, "description": "Contact info" },
+        "additionalInfo": { "type": "string", "maxLength": 1000, "description": "Highlights or special info" },
+        "tone": { "type": "string", "maxLength": 50, "description": "Tone of voice" },
+        "selectedTypes": { "type": "string", "maxLength": 500, "description": "JSON string of selected content channels" },
+        "isPublished": { "type": "boolean", "description": "Whether the event is published publicly" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["userUid", "eventName", "eventType", "eventDate", "venue", "organizer"]
+    },
+    "Reel": {
+      "title": "Reel",
+      "description": "Short form video and reel script record",
+      "type": "object",
+      "properties": {
+        "userUid": { "type": "string", "description": "Creator Firebase UID" },
+        "title": { "type": "string", "maxLength": 150, "description": "Title of the reel" },
+        "topic": { "type": "string", "maxLength": 200, "description": "Core topic" },
+        "platforms": { "type": "string", "maxLength": 100, "description": "Target platforms" },
+        "targetAge": { "type": "string", "maxLength": 50, "description": "Target demographic age" },
+        "hook": { "type": "string", "maxLength": 500, "description": "Opening verbal/visual hook" },
+        "script": { "type": "string", "maxLength": 5000, "description": "Scene-by-scene script" },
+        "caption": { "type": "string", "maxLength": 3000, "description": "Caption copy" },
+        "callToAction": { "type": "string", "maxLength": 500, "description": "Call to action" },
+        "audienceAnalysis": { "type": "string", "maxLength": 1500, "description": "Audience insights" },
+        "seoKeywords": { "type": "string", "maxLength": 500, "description": "Keywords" },
+        "hashtags": { "type": "string", "maxLength": 500, "description": "Hashtags" },
+        "bestPublishTimes": { "type": "string", "maxLength": 300, "description": "Publish schedule" },
+        "retentionTips": { "type": "string", "maxLength": 1000, "description": "Retention recommendations" },
+        "tone": { "type": "string", "maxLength": 50, "description": "Content tone" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["title", "topic", "platforms", "targetAge", "hook", "script", "caption", "callToAction"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "User profile document keyed by auth UID"
+    },
+    "/events/{eventId}": {
+      "schema": "Event",
+      "description": "Created events and promotional campaigns"
+    },
+    "/reels/{reelId}": {
+      "schema": "Reel",
+      "description": "Created video reels and script packages"
+    }
+  }
+}

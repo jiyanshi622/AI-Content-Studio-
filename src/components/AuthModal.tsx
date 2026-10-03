@@ -285,7 +285,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                   required
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Alex Rivera"
+                  placeholder="e.g. Rohan Sharma"
                   className="w-full pl-9 pr-3 py-2.5 text-xs sm:text-sm bg-slate-950 border border-slate-800 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:border-rose-500"
                 />
               </div>
@@ -436,7 +436,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({
                 className="p-2.5 rounded-xl border border-rose-500/30 bg-rose-950/30 hover:bg-rose-950/60 text-left transition-colors cursor-pointer group"
               >
                 <div className="text-xs font-bold text-white group-hover:text-rose-300 flex items-center justify-between">
-                  <span>Alex Rivera</span>
+                  <span>Rohan Sharma</span>
                   <span className="text-[10px] text-rose-400 font-mono">🏢 Organizer</span>
                 </div>
                 <div className="text-[10px] text-slate-400 mt-0.5">organizer@aicontent.studio</div>

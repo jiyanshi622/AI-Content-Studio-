@@ -1,11 +1,12 @@
 {
-  "projectId": "vivid-client-6mn89",
-  "appId": "1:521489062870:web:2f9492dde1be1ce0cd6277",
-  "apiKey": "AIzaSyDbojF4A7kIF5w4LI5ifFXY1vlST7DU5xg",
-  "authDomain": "vivid-client-6mn89.firebaseapp.com",
-  "storageBucket": "vivid-client-6mn89.firebasestorage.app",
-  "messagingSenderId": "521489062870",
+  "projectId": "gen-lang-client-0956879968",
+  "appId": "1:554214762201:web:e5ca34ded70cdb115d00c8",
+  "apiKey": "AIzaSyAqhn2lWaf-LUM2AHgzFJqZCcb3shB8r_I",
+  "authDomain": "gen-lang-client-0956879968.firebaseapp.com",
+  "firestoreDatabaseId": "ai-studio-aicontentstudio-c3fee910-bda5-4143-a562-db533e76b597",
+  "storageBucket": "gen-lang-client-0956879968.firebasestorage.app",
+  "messagingSenderId": "554214762201",
   "measurementId": "",
-  "oAuthClientId": "521489062870-p3ltqlnhiab7u9mlu3p8omsn66pul0gb.apps.googleusercontent.com",
+  "oAuthClientId": "554214762201-lb828eu5if73r6a4sqnvs2lles2qjrdg.apps.googleusercontent.com",
   "recaptchaSiteKey": ""
 }

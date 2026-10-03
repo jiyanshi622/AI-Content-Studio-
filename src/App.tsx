@@ -11,7 +11,10 @@ import { ExploreEventsView } from './components/ExploreEventsView';
 import { ParticipantExperienceForm } from './components/ParticipantExperienceForm';
 import { ParticipantPassportView } from './components/ParticipantPassportView';
 import { ReelCreatorView } from './components/ReelCreatorView';
+import { MediaStudioView } from './components/MediaStudioView';
+import { FloatingGlassDock } from './components/FloatingGlassDock';
 import { AuthModal } from './components/AuthModal';
+import { DatabaseInspectorModal } from './components/DatabaseInspectorModal';
 import { ToastContainer, ToastMessage } from './components/Toast';
 import {
   AppMode,
@@ -48,9 +51,32 @@ export default function App() {
   const [currentUser, setCurrentUser] = useState<UserAccount | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState<'login' | 'register'>('login');
+  const [isDbInspectorOpen, setIsDbInspectorOpen] = useState(false);
 
   const [currentTab, setCurrentTab] = useState<NavTab>('home');
-  const [bgTheme, setBgTheme] = useState<BackgroundTheme>('sunset');
+  const [bgTheme, setBgTheme] = useState<BackgroundTheme>(() => {
+    const saved = typeof window !== 'undefined' ? localStorage.getItem('app_theme') : null;
+    return saved === 'light' || saved === 'dark' ? (saved as BackgroundTheme) : 'dark';
+  });
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('app_theme', bgTheme);
+      if (bgTheme === 'light') {
+        document.documentElement.classList.add('light');
+        document.documentElement.classList.remove('dark');
+        document.body.classList.add('light');
+        document.body.classList.remove('dark');
+      } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        document.body.classList.add('dark');
+        document.body.classList.remove('light');
+      }
+    } catch {
+      // storage unavailable
+    }
+  }, [bgTheme]);
 
   // Organizer state
   const [activeDetails, setActiveDetails] = useState<EventDetails>(
@@ -538,8 +564,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-rose-500 selection:text-white relative">
-      {/* Dynamic Social Media Mesh Gradient & Floating Elements Background */}
+    <div
+      className={`min-h-screen flex flex-col relative transition-colors duration-200 ${
+        bgTheme === 'light' ? 'text-slate-900 light' : 'text-white dark'
+      } selection:bg-rose-500 selection:text-white`}
+    >
+      {/* Background Style: Faithfully matching Reference Image 4 texture & depth */}
       <SocialMediaBackground theme={bgTheme} />
 
       {/* Toast Notification Container */}
@@ -552,6 +582,13 @@ export default function App() {
         onAuthSuccess={handleAuthSuccess}
         initialMode={authModalMode}
         initialRole={appMode}
+      />
+
+      {/* Cloud Database Inspector Modal */}
+      <DatabaseInspectorModal
+        isOpen={isDbInspectorOpen}
+        onClose={() => setIsDbInspectorOpen(false)}
+        isLight={bgTheme === 'light'}
       />
 
       {/* Top Bar Navigation with Role Switcher & Auth */}
@@ -573,6 +610,7 @@ export default function App() {
         currentUser={currentUser}
         onOpenAuth={handleOpenAuth}
         onLogout={handleLogout}
+        onOpenDatabaseInspector={() => setIsDbInspectorOpen(true)}
       />
 
       {/* Main Content Area */}
@@ -589,6 +627,18 @@ export default function App() {
               window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             onLoadDemoEvent={handleLoadDemoEvent}
+            onCopyText={handleCopyText}
+            onOpenMediaStudio={() => {
+              setCurrentTab('media-studio');
+              window.scrollTo({ top: 0, behavior: 'smooth' });
+            }}
+            theme={bgTheme}
+          />
+        )}
+
+        {/* MULTIMODAL MEDIA AI STUDIO (Image Upload + Post, Media Evaluator, Video Intelligence) */}
+        {currentTab === 'media-studio' && (
+          <MediaStudioView
             onCopyText={handleCopyText}
           />
         )}
@@ -743,11 +793,40 @@ export default function App() {
         )}
       </main>
 
+      {/* Reference Design: Floating Frosted Glass Dock */}
+      <FloatingGlassDock
+        currentTab={currentTab}
+        onSelectTab={(tab) => {
+          setCurrentTab(tab);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
+        mode={appMode}
+        onSelectMode={(newMode) => {
+          setAppMode(newMode);
+          if (newMode === 'organizer') {
+            showToast('Switched to Event Organizer Mode 🏢', 'info');
+          } else {
+            showToast('Switched to Attendee / Participant Mode 🎓', 'info');
+          }
+        }}
+        currentUser={currentUser}
+        onOpenAuth={handleOpenAuth}
+        theme={bgTheme}
+      />
+
       {/* Global Clean Footer */}
-      <footer className="border-t border-slate-800/80 bg-slate-950 py-8 text-xs text-slate-500">
+      <footer
+        className={`border-t py-8 text-xs transition-colors duration-200 ${
+          bgTheme === 'light'
+            ? 'border-slate-200/80 bg-transparent text-slate-700'
+            : 'border-white/10 bg-transparent text-slate-400'
+        }`}
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-slate-300">AI Content Studio</span>
+            <span className={`font-bold ${bgTheme === 'light' ? 'text-slate-900' : 'text-slate-300'}`}>
+              AI Content Studio
+            </span>
             <span>·</span>
             <span>Two Specialized Roles: Organizers & Attendees</span>
           </div>
@@ -759,7 +838,11 @@ export default function App() {
                 setCurrentTab('home');
               }}
               className={`transition-colors flex items-center gap-1 cursor-pointer ${
-                appMode === 'organizer' ? 'text-rose-400 font-bold' : 'hover:text-slate-300'
+                appMode === 'organizer'
+                  ? 'text-rose-500 font-bold'
+                  : bgTheme === 'light'
+                  ? 'hover:text-black'
+                  : 'hover:text-slate-300'
               }`}
             >
               <Building className="w-3.5 h-3.5" />
@@ -771,7 +854,11 @@ export default function App() {
                 setCurrentTab('explore');
               }}
               className={`transition-colors flex items-center gap-1 cursor-pointer ${
-                appMode === 'participant' ? 'text-rose-400 font-bold' : 'hover:text-slate-300'
+                appMode === 'participant'
+                  ? 'text-rose-500 font-bold'
+                  : bgTheme === 'light'
+                  ? 'hover:text-black'
+                  : 'hover:text-slate-300'
               }`}
             >
               <Users className="w-3.5 h-3.5" />
@@ -779,15 +866,15 @@ export default function App() {
             </button>
             <button
               onClick={() => setCurrentTab('about')}
-              className="hover:text-slate-300 transition-colors cursor-pointer"
+              className={`transition-colors cursor-pointer ${
+                bgTheme === 'light' ? 'hover:text-black' : 'hover:text-slate-300'
+              }`}
             >
               Architecture & About
             </button>
           </div>
 
-          <div className="text-slate-500">
-            Create Once · Post Everywhere
-          </div>
+          <div>Create Once · Post Everywhere</div>
         </div>
       </footer>
     </div>

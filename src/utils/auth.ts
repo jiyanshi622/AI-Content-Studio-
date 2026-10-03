@@ -6,7 +6,7 @@ const SESSION_STORAGE_KEY = 'ai_content_studio_active_session_v1';
 export const DEMO_USERS: UserAccount[] = [
   {
     id: 'user-organizer-demo',
-    name: 'Alex Rivera',
+    name: 'Rohan Sharma',
     email: 'organizer@aicontent.studio',
     password: 'password123',
     role: 'organizer',
